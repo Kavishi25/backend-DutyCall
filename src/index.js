@@ -2,13 +2,37 @@ import express from "express";
 import "dotenv/config";
 import authRoutes from "./routes/authRoutes.js";
 import { connectDB } from "./lib/db.js";
+import createReportRoutes from "./routes/reportRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use("/api/auth", authRoutes);
+// Add JSON parsing middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  connectDB();
+app.use("/api/auth", authRoutes);
+app.use("/api/reports", createReportRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    error: "Something went wrong!",
+  });
 });
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to the database:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
