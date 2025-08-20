@@ -41,7 +41,6 @@ const reports = new mongoose.Schema(
       required: false,
     },
   },
-
   { timestamps: true }
 );
 

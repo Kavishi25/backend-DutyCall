@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import authRoutes from "./routes/authRoutes.js";
 import { connectDB } from "./lib/db.js";
-import createReportRoutes from "./routes/reportRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js"; // Changed to lowercase
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/reports", createReportRoutes);
+app.use("/api/reports", reportRoutes); // Fixed route handler name
 
 // Error handling middleware
 app.use((err, req, res, next) => {
